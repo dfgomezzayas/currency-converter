@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=1024">
+  <title>Conversor de monedas</title>
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <main class="card">
+    <h1 class="card__title">Conversor de monedas</h1>
+
+    <label class="field" for="amount">
+      <span class="field__label">Monto</span>
+      <input id="amount" class="field__input" type="text" inputmode="decimal"
+             autocomplete="off" placeholder="0" maxlength="32">
+    </label>
+
+    <div class="selectors">
+      <label class="field" for="sourceCurrency">
+        <span class="field__label">De</span>
+        <select id="sourceCurrency" class="field__select"></select>
+      </label>
+      <label class="field" for="targetCurrency">
+        <span class="field__label">A</span>
+        <select id="targetCurrency" class="field__select"></select>
+      </label>
+    </div>
+
+    <div class="keypad" id="keypad" aria-label="Teclado en pantalla">
+      <button type="button" class="keypad__key" data-key="7">7</button>
+      <button type="button" class="keypad__key" data-key="8">8</button>
+      <button type="button" class="keypad__key" data-key="9">9</button>
+      <button type="button" class="keypad__key keypad__key--action" data-key="backspace" aria-label="Borrar">⌫</button>
+
+      <button type="button" class="keypad__key" data-key="4">4</button>
+      <button type="button" class="keypad__key" data-key="5">5</button>
+      <button type="button" class="keypad__key" data-key="6">6</button>
+      <button type="button" class="keypad__key keypad__key--action" data-key="clear" aria-label="Limpiar">C</button>
+
+      <button type="button" class="keypad__key" data-key="1">1</button>
+      <button type="button" class="keypad__key" data-key="2">2</button>
+      <button type="button" class="keypad__key" data-key="3">3</button>
+      <button type="button" class="keypad__key" data-key=".">.</button>
+
+      <button type="button" class="keypad__key keypad__key--wide" data-key="0">0</button>
+    </div>
+
+    <div class="actions">
+      <button type="button" id="convertButton" class="button button--primary">Convertir</button>
+      <button type="button" id="clearButton" class="button button--secondary">Limpiar</button>
+    </div>
+
+    <section id="result" class="result" aria-live="polite"></section>
+  </main>
+
+  <script type="module" src="js/main.js"></script>
+</body>
+</html>

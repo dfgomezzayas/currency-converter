@@ -1,0 +1,23 @@
+services: # Lista de "cajitas" (contenedores) que quiero
+  api: # Primera cajita, se llama "api" (este nombre importa, luego se usa como dirección)
+    build: ./api # Constrúyela usando el Dockerfile de la carpeta ./api
+    healthcheck: # "Cada 10 s pregúntale si está viva"
+      test: [
+          "CMD",
+          "python",
+          "-c",
+          "import urllib.request; urllib.request.urlopen('http://localhost:5000/health', timeout=2)",
+        ] # La pregunta: ¿responde /health?
+      interval: 10s # cada cuánto preguntar
+      timeout: 3s # cuánto esperar la respuesta
+      retries: 5 # tras 5 fallos seguidos, se marca "unhealthy"
+      start_period: 5s # gracia inicial mientras arranca
+    # NO tiene "ports": nadie desde fuera puede tocarla
+
+  frontend: # Segunda cajita
+    build: ./frontend # Constrúyela con el Dockerfile de ./frontend
+    depends_on:
+      api:
+        condition: service_healthy # "No me arranques hasta que api esté SANA"
+    ports:
+      - "8080:80" # Puerto 8080 de tu PC → puerto 80 dentro del contenedor

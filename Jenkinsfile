@@ -67,10 +67,18 @@ pipeline {
 
         stage('Pruebas de humo') {
             steps {
-                // Se ejecutan dentro del contenedor frontend: recorren nginx -> api
+                // Se ejecutan dentro del contenedor frontend: recorren nginx -> api.
+                // El frontend no tiene healthcheck, así que se reintenta hasta 30 s
+                // mientras nginx empieza a aceptar conexiones. Se usa 127.0.0.1 porque
+                // nginx solo escucha en IPv4 y "localhost" puede resolver a ::1.
                 sh '''
-                    docker compose exec -T frontend wget -qO- http://localhost/api/health | grep '"ok"'
-                    docker compose exec -T frontend wget -qO- "http://localhost/api/convert?de=USD&a=COP&valor=10.5" | tee convert.json
+                    for i in $(seq 1 15); do
+                        docker compose exec -T frontend wget -qO- http://127.0.0.1/api/health > health.json 2>/dev/null && break
+                        sleep 2
+                    done
+                    cat health.json
+                    grep -q '"ok"' health.json
+                    docker compose exec -T frontend wget -qO- "http://127.0.0.1/api/convert?de=USD&a=COP&valor=10.5" | tee convert.json
                     grep -q CONVERSION_OK convert.json
                     grep -q '"resultado": *"*42000' convert.json
                 '''
@@ -81,7 +89,7 @@ pipeline {
     post {
         always {
             sh 'docker compose logs --no-color > compose.log 2>&1 || true'
-            archiveArtifacts artifacts: 'compose.log, convert.json', allowEmptyArchive: true
+            archiveArtifacts artifacts: 'compose.log, health.json, convert.json', allowEmptyArchive: true
             sh 'docker compose down --rmi local --volumes --remove-orphans || true'
             cleanWs()
         }

@@ -1,0 +1,17 @@
+# Levanta Jenkins:  cd jenkins && docker compose up -d --build
+# Interfaz web:     http://localhost:8081  (el 8080 ya lo usa el frontend)
+services:
+  jenkins:
+    build: .
+    ports:
+      - "8081:8080"   # interfaz web de Jenkins
+      - "50000:50000" # agentes (no se usan en esta entrega, queda documentado)
+    volumes:
+      - jenkins_home:/var/jenkins_home              # configuración, jobs e historial
+      - /var/run/docker.sock:/var/run/docker.sock   # Jenkins usa el Docker del equipo
+    group_add:
+      - "${DOCKER_GID:-0}" # grupo dueño del socket; en Linux suele ser el grupo "docker"
+    restart: unless-stopped
+
+volumes:
+  jenkins_home:

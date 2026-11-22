@@ -94,3 +94,4 @@ docker network ls
 docker network inspect "$(basename "$PWD")_default" --format '{{range .Containers}}{{.Name}} {{end}}'
 docker compose logs frontend api
 ```
+

@@ -20,4 +20,4 @@ services: # Lista de "cajitas" (contenedores) que quiero
       api:
         condition: service_healthy # "No me arranques hasta que api esté SANA"
     ports:
-      - "8080:80" # Puerto 8080 de tu PC → puerto 80 dentro del contenedor
+      - "${FRONTEND_PORT:-8080}:80" # Puerto del PC (8080 por defecto) → puerto 80 dentro del contenedor

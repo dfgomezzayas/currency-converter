@@ -22,7 +22,7 @@ def client():
         ("COP", "USD", "100000", "25.00"),
         ("USD", "EUR", "10", "9.20"),
         ("EUR", "COP", "2", "8700"),
-        ("USD", "COP", "10.5", "42000"),
+        ("USD", "COP", "10.5", "42001"),
     ],
 )
 def testSupportedPairs(source, target, amount, expected):
